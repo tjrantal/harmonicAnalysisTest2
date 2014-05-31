@@ -1,0 +1,4 @@
+Testing the effect of Hann-windowing on fft, and harmonic analysis.
+The length of sample is modified from even sample of cycles to non-even
+The length of period for harmonic analysis is also modified
+ 
