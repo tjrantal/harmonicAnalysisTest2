@@ -84,7 +84,7 @@ graphics_toolkit(gTK);
 for sit = 1:length(sError)
 	if showFig
 		titles = {sprintf("signal serr %.2f",sError(sit)),'hanSignal','ffAmp','hanFftAmp','harmonicAnalysis','hanHarmonicAnalysi'};
-		fh = figure('__graphics_toolkit_',gTK,'position',[10 10 1000 500]);
+		fh = figure('__graphics_toolkit__',gTK,'position',[10 10 1000 500]);
 		for i = 1:6
 			ax(i) = subplot(3,2,i);
 			hold on;
@@ -139,12 +139,12 @@ for sit = 1:length(sError)
 		end
 	end
 	if showFig
-		keyboard;
+		%keyboard;
 		drawnow();
-		print('-dpng','-r200','-S2000,1000',sprintf("./figures/serr%.0f.png",sError*100));
-		keyboard;
+		print('-dpng','-r200','-S2000,1000',sprintf("./figures/serr%.0f.png",sError(sit)*100));
+		%keyboard;
 		close;
 	end
-	keyboard;
+	%keyboard;
 end
 fclose(testResults);
