@@ -1,3 +1,6 @@
+%Create two steps, one longer, and one shorter to create a full
+%stride. The stride is then repeated 2.5 to 3 times
+
 close all;
 clear all;
 clc;
@@ -27,6 +30,7 @@ function harmonicAmps = harmonicAmp(signal,t,period)
 	harmonicAmps = sqrt(sum(coeffs.^2,2));
 endfunction;
 
+%Open results file, and write a header
 testResults = fopen('fftResulFile.xls',"w");
 		fprintf(testResults,"sErr\toffs\tHR\thanHR\t");
 		for ha = 1:20
@@ -37,21 +41,50 @@ testResults = fopen('fftResulFile.xls',"w");
 		end
 		fprintf(testResults,"\n");
 
-strideDuration = 1.1;
+%Create the stride
+dt = 0.005;
+stepDurations = [0.6 0.5];
+stepFreqs = (1./stepDurations)/2;
+fs = [stepFreqs; 2*stepFreqs; 3*stepFreqs; 4*stepFreqs;];
+amps = [0.1,0.08; 1,1.02; 0.11,0.12; 0.3,0.25];
+stride = [];
+%concat steps to a stride
+for s = 1:length(stepDurations)
+	t = 0:dt:(stepDurations(s)-dt);
+	step = zeros(size(t));
+	for i = 1:size(fs,1)
+		step = step+sin(2*pi*fs(i,s)*t)*amps(i,s);
+	end
+	stride = [stride step];
+end
+timeInstances = ([1:length(stride)]-1)*dt;
+%figure
+%plot(timeInstances,stride)
+
+%Create 3 full strides
+origSignal = [];
+for i =1:3
+	origSignal = [origSignal stride];
+end
+%figure
+%plot(origSignal)
+%keyboard;	
+strideDuration = sum(stepDurations);
 strideFreq = 1/strideDuration;
 sError = [-0.15:0.05:0.15];
-fs = [strideFreq 2*strideFreq 3*strideFreq 4*strideFreq];
-amps = [0.1 1 0.11 0.3];
 sampleStop = strideDuration*1;
-dt = 0.005;
+
 iterations = 10;
 offset = strideDuration/2/iterations;
 cMap = jet(iterations);
 showFig = 1;
+gTK = 'gnuplot';
+graphics_toolkit(gTK);
+
 for sit = 1:length(sError)
 	if showFig
 		titles = {sprintf("signal serr %.2f",sError(sit)),'hanSignal','ffAmp','hanFftAmp','harmonicAnalysis','hanHarmonicAnalysi'};
-		fh = figure('position',[10 10 1000 500]);
+		fh = figure('__graphics_toolkit_',gTK,'position',[10 10 1000 500]);
 		for i = 1:6
 			ax(i) = subplot(3,2,i);
 			hold on;
@@ -59,14 +92,10 @@ for sit = 1:length(sError)
 		end
 	end
 	for it = 1:iterations
-
-		t = ((it-1)*offset):dt:sampleStop;
+		
+		t = 0:dt:(3*sampleStop-((it-1)*offset))-dt;
 		%t = 0:dt:sampleStop;
-		signal = zeros(size(t));
-		for i = 1:length(fs)
-			signal = signal+sin(2*pi*fs(i)*t)*amps(i);
-		end
-
+		signal = origSignal(1:length(t));
 		%FFT analysis
 		fftLength = double(int32(length(signal)/2));
 		freq= [0:fftLength]/dt/2/fftLength;
@@ -106,9 +135,16 @@ for sit = 1:length(sError)
 			set(fh,'currentaxes',ax(6));
 			bar(2*hHarmonicAmps,'facecolor','none','edgecolor',cMap(it,:),'linewidth',3)
 			set(gca,'ylim',[0 1])
-			drawnow();
-			pause(1)
+			%drawnow();
 		end
 	end
+	if showFig
+		keyboard;
+		drawnow();
+		print('-dpng','-r200','-S2000,1000',sprintf("./figures/serr%.0f.png",sError*100));
+		keyboard;
+		close;
+	end
+	keyboard;
 end
 fclose(testResults);
