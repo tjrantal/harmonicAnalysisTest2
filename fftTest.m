@@ -167,10 +167,10 @@ for sit = 1:length(sError)
 			set(gca,'ylim',[0 1])
 			set(fh,'currentaxes',ax(7));
 			plot(t(1:length(reconstructed)),reconstructed,'color',cMap(it,:));
-			set(gca,'xlim',[0 3.5],'ylim',[-1.2 2])
+			set(gca,'xlim',[0 3.5],'ylim',[-1.5 2])
 			set(fh,'currentaxes',ax(8));
 			plot(t(1:length(hReconstructed)),hReconstructed,'color',cMap(it,:));
-			set(gca,'xlim',[0 3.5],'ylim',[-1.2 2])
+			set(gca,'xlim',[0 3.5],'ylim',[-1.5 2])
 			%drawnow();
 		end
 	end
