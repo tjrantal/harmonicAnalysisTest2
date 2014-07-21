@@ -1,0 +1,31 @@
+<!-- bluetoothTest ANT build system -->
+<project name="MSE" default="jar" basedir=".">
+  <description>
+    Ant build system for MSE
+  </description>
+
+  <!-- set global properties for this build -->
+  <property environment="env"/>
+  <property name="JAVA_HOME" location="${env.JAVA_HOME}" />
+  <property name="javasrc" location="src/" />
+  <property name="build" location="build" />
+  <property name="classes" location="build/java" />
+  <property name="doc" location="doc" />
+  
+  <!-- Initialize -->
+  <target name="javacompile" description="Compile Java source" >
+	<mkdir dir="${classes}"/>
+	<javac source="1.5" target="1.5" srcdir="${javasrc}" destdir="${classes}" nowarn="on">
+	</javac>
+  </target>
+  
+	<target name="jar" depends="javacompile" description="Create Jar file" >
+		<jar jarfile="${build}/MSE.jar" basedir="${classes}"/>
+	</target>
+
+	<target name="doc" depends="jar" description="Create javadoc">
+		<javadoc sourcepath="${javasrc}" packagenames="edu.deakin.timo" destdir="${doc}"/>
+	</target>
+  
+</project>
+

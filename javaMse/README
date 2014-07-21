@@ -1,0 +1,9 @@
+Class to calculate multiscale entropy. Ported from M. Costa's C implementation, visit http://physionet.org/physiotools/mse/ for the original implementation, and further details.
+
+Ported from C to java by Timo Rantalainen 2014 tjrantal at gmail dot com. The C source (not included) written by M Costa 2004 was copied from http://physionet.org/physiotools/mse/
+Licensed with the GPL as per Costa's licensing. Implemented calculating MSE for different coarseness levels simultaneously by treading to utilize the multiple cores often found in contemporary PCs.
+
+Use the ant build script to build. The script will create a .jar file to ./build directory. javaaddpath that jar in your matlab script to use the class.
+
+Alternatively cd to ./src and javac edu/deakin/timo/MultiscaleEntropy.java
+javaaddpath the path to MultiscaleEntropy.class to use the class in matlab.
